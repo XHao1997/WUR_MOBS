@@ -36,11 +36,11 @@ DTmin = T - T_min
 DTa = T_max - T_opt
 DTb = T_opt - T_min
 # TODO: Define TI
-def fuc_Tl2(DTmax, DTmin, DTa, DTb,z):
+def fuc_Tl2(DTmax, DTmin, DTa, DTb,z=1.33):
     return ((DTmax/DTa) * (DTmin/DTb)**(DTb/DTa) )**z
 
-# TODO: Make a plot for TI vs T
-plt.plot(T_range, fuc_Tl(T=T_range))
+# # TODO: Make a plot for TI vs T
+# plt.plot(T_range, fuc_Tl(T=T_range))
+# # plt.show()
+# plt.plot(T_range, fuc_Tl2(T=T_range),linestyle='dashed')
 # plt.show()
-plt.plot(T_range, fuc_Tl2(T=T_range),linestyle='dashed')
-plt.show()
