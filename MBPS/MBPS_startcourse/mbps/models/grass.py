@@ -118,19 +118,19 @@ class Grass(Module):
         # TODO: Comment the units and short description for each parameter
         a = self.p['a']  # [m2 kgC-1] structural specific leaf area
         alpha = self.p['alpha']  # [kgCO2 J-1] leaf photosynthetic efficiency
-        beta = 0.05
-        gama = 0.
-        k = 0.5
-        m = 0.1
-        M = 0.02
-        mu_m = 0.5
-        P0 = 0.432
-        phi = 2 * np.power(10, -9)
-        Tmax = 42
-        Tmin = 0
-        Topt = 20
-        Y = 0.75
-        z = 1.33
+        beta = self.p['beta']
+        gama = self.p['gama']
+        k = self.p['k']
+        m = self.p['m']
+        M = self.p['M']
+        mu_m = self.p['mu_m']
+        P0 = self.p['P0']
+        phi = self.p['phi']
+        Tmax = self.p['Tmax']
+        Tmin = self.p['Tmin']
+        Topt = self.p['Topt']
+        Y = self.p['Y']
+        z = self.p['z']
 
         # -- Disturbances at instant _t
         I0, T, WAI = self.d['I0'], self.d['T'], self.d['WAI']
@@ -156,11 +156,11 @@ class Grass(Module):
         # - Photosynthesis
         LAI = a * Wg
         Pm = P0 * TI
-        C1 = alpha * (k / (1 - m)) * I0
+        C1 = alpha * (k / (1 - m)) * _I0
         P = Pm / k * np.log((C1 + Pm) / (C1 * np.exp(-k * LAI) + Pm))
         # - Flows
         # Photosynthesis [kgC m-2 d-1]
-        f_P = WAI * phi * theta * P
+        f_P = _WAI * phi * theta * P
 
         # Maintenance respiration [kgC m-2 d-1]
         f_MR = M * Wg
