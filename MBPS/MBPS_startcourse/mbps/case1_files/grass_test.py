@@ -18,7 +18,7 @@ tsim = np.linspace(0.0, 365.0, 365 + 1)  # [d]
 dt = 1  # [d]
 # Initial conditions
 # TODO: Define sensible values for the initial conditions
-x0 = {'Ws': 10, 'Wg': 10}  # [kgC m-2]
+x0 = {'Ws': 10e-8, 'Wg': 10e-8}  # [kgC m-2]
 # Model parameters (as provided by Mohtar et al. 1997 p.1492-1493)
 # TODO: Define values for the model parameters
 p = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
@@ -47,13 +47,13 @@ p = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
 # PAR [J m-2 d-1], environment temperature [°C], and
 # water availability index [-]
 # TODO: Fill in sensible constant values for T and I0.
-d = {'I0': np.array([tsim, np.full((tsim.size,), 1.0)]).T,
+d = {'I0': np.array([tsim, np.full((tsim.size,), 20.0)]).T,
      'T': np.array([tsim, np.full((tsim.size,), 23.0)]).T,
-     'WAI': np.array([tsim, np.full((tsim.size,), 1.0)]).T
+     'WAI': np.array([tsim, np.full((tsim.size,), 10.0)]).T
      }
 
 # Controlled inputs
-u = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
+u = {'f_Gr': 5e-8, 'f_Hr':5e-9}  # [kgDM m-2 d-1]
 
 # Initialize grass module
 grass = Grass(tsim, dt, x0, p)

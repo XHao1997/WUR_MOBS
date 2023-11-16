@@ -172,7 +172,7 @@ class Grass(Module):
         f_S = beta * Wg
         # Recycling
         f_R = gama * Wg
-
+        print(LAI)
         # -- Differential equations [kgC m-2 d-1]
         # TODO: Write the differential equations based on the flow variables
         dWs_dt = f_P - f_MR - f_SR - f_G + f_R
