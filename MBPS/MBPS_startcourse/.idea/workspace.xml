@@ -5,25 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee56e85e-f007-4998-a1c7-a40155dc91d6" name="Changes" comment="refactor layout">
-      <change afterPath="$PROJECT_DIR$/mbps/case1_cal/etmgeg_260.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mbps/case1_cal/grass_cal.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mbps/models/grass_sol.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/MBPS_startcourse.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MBPS_startcourse.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/case1_files/grass_eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/case1_files/grass_eval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/case1_files/grass_sa.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/case1_files/grass_sa.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/case1_files/grass_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/case1_files/grass_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/models/grass.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/models/grass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/models/lotka_volterra.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/models/lotka_volterra.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/t_grass_growth/Plant Cell   Environment - December 1983 - JOHNSON - Vegetative crop growth model incorporating leaf area expansion and.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_grass_growth/Plant Cell   Environment - December 1983 - JOHNSON - Vegetative crop growth model incorporating leaf area expansion and.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/t_grass_growth/pdfviewer.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_grass_growth/pdfviewer.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/t_grass_growth/t_grass_growth_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_grass_growth/t_grass_growth_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/t_grass_growth/t_grass_growth_2.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_grass_growth/t_grass_growth_2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/t_grass_growth/t_grass_growth_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_grass_growth/t_grass_growth_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_least_squares.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_least_squares.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_lotka-volterra_cal.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_lotka-volterra_cal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/tutorials/t_sir.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_sir.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,16 +36,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Hao Xu/Desktop/WUR_MOBS/MBPS/MBPS_startcourse/mbps/tutorials",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Hao Xu/Desktop/WUR_MOBS/MBPS/MBPS_startcourse/mbps/tutorials&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\26851\Desktop\WUR_MOBS\MBPS\MBPS_startcourse\mbps\models" />
@@ -70,7 +55,7 @@
       <recent name="C:\Users\Hao Xu\Desktop\WUR_MOBS\MBPS\MBPS_startcourse\mbps\models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.grass_test">
+  <component name="RunManager" selected="Python.t_lotka-volterra_cal">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="MBPS_startcourse" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -84,27 +69,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="grass_eval" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="MBPS_startcourse" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="D:\Users\Hao_Xu\anaconda3\envs\wur_mbps\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mbps/case1_files" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mbps/case1_files/grass_eval.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -176,6 +140,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="t_log_growth_cal" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MBPS_startcourse" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="D:\Users\Hao_Xu\anaconda3\envs\wur_mbps\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_log_growth_cal.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="t_lotka-volterra_cal" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="MBPS_startcourse" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -199,11 +184,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.grass_test" />
         <item itemvalue="Python.t_lotka-volterra_cal" />
+        <item itemvalue="Python.t_log_growth_cal" />
+        <item itemvalue="Python.grass_test" />
         <item itemvalue="Python.t_least_squares" />
         <item itemvalue="Python.grass_sa" />
-        <item itemvalue="Python.grass_eval" />
       </list>
     </recent_temporary>
   </component>
@@ -237,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699897443742</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update to least squares">
+      <created>1700155623432</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1700155623432</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

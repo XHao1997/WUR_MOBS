@@ -25,7 +25,7 @@ dt = 1.0                    # [d] time-step size
 x0 = {'prey':50, 'pred':50} # populations [preys, preds]
 # Model parameters
 # p1 [d-1], p2 [pred-1 d-1], p3 [prey-1 d-1], p4 [d-1]
-p = {'p3':0.01/30, 'p4':1.0/30}
+p = {'p2':0.02/30, 'p4':1.0/30}
 # Initialize object
 lv = LotkaVolterra(tsim, dt, x0, p)
 
@@ -42,7 +42,7 @@ def fcn_y(p0):
     lv.x0 = x0.copy()
     # Reassign parameters from array p0 to object
     lv.p['p1'] = p0[0]
-    lv.p['p2'] = p0[1]
+    lv.p['p3'] = p0[1]
     # Simulate the model
     y = lv.run(tspan)
     # Retrieve result (model output of interest)
@@ -50,13 +50,14 @@ def fcn_y(p0):
     # it is best to compute the residuals based on numpy arrays.
     # We use rows for time, and columns for model outputs.
     # TODO: retrieve the model outputs into a numpy array for populations 'pop'
-    pop = y['pred2']+y['prey2']
+    print(y['prey2'].shape)
+    pop = np.concatenate((y['prey'].reshape(-1,1),y['pred'].reshape(-1,1)),axis=1)
     return pop
 
 # Run calibration function
 # -- Exercise 3.1. Estimate p1 and p2
 # -- Exercise 3.2. estimate p1 and p3
-p0 = np.array([0.01/30, 0.1/30]) # Initial guess
+p0 = np.array([1.001/30, 0.01/30]) # Initial guess
 y_ls = least_squares(fcn_residuals, p0,
                      bounds = ([1E-6, 1E-6], [np.inf, np.inf]),
                      args=(fcn_y, lv.t, t_data, y_data),
@@ -77,4 +78,7 @@ y0 = fcn_y(p0)
 plt.figure('Calibrated model and data')
 plt.plot(tsim,y_hat)
 plt.plot(tsim,y0)
+plt.scatter(t_data,y_data[:,0],label='prey')
+plt.scatter(t_data,y_data[:,1],label='pred')
+
 plt.show()
