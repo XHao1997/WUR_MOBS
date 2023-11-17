@@ -80,7 +80,7 @@ class LotkaVolterra(Module):
         # See the help of solve_ivp, and pay special attention to
         # the argument t_eval.
         sol = solve_ivp(diff, tspan, y0, t_eval=np.arange(tspan[0], tspan[1] + 1, dt))
-        print(tspan)
+        # print(tspan)
         # Retrieve results from numerical integration output
         # TODO: retrieve the results from y_int2
         t = y_int['t']  # time

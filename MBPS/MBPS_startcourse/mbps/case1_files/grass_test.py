@@ -14,28 +14,27 @@ from mbps.models.grass import Grass
 
 # -- Define the required variables
 # Simulation time
-tsim = np.linspace(0.0, 365.0, 365 + 1)  # [d]
-dt = 1  # [d]
+tsim = np.linspace(0.0, 365.0, 365+1) # [d]
+dt = 1 # [d]
 # Initial conditions
 # TODO: Define sensible values for the initial conditions
-x0 = {'Ws': 10e-8, 'Wg': 10e-8}  # [kgC m-2]
+x0 = {'Ws':1E-2,'Wg':1E-3} # [kgC m-2]
 # Model parameters (as provided by Mohtar et al. 1997 p.1492-1493)
 # TODO: Define values for the model parameters
-p = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
-     'alpha': 2E-9,  # [kgCO2 J-1] leaf photosynthetic efficiency
-     'beta': 0.05,
-     'gama': 0.0,
-     'k': 0.5,
-     'm': 0.1,
-     'M': 0.02,
-     'mu_m': 0.5,
-     'P0': 0.432,
-     'phi': 0.9,
-     'Tmax': 42,
-     'Tmin': 0,
-     'Topt': 20,
-     'Y': 0.75,
-     'z': 1.33
+p = {'a':40.0,          # [m2 kgC-1] structural specific leaf area
+     'alpha':2E-9,      # [kgCO2 J-1] leaf photosynthetic efficiency
+     'beta':0.05,       # [d-1] senescence rate
+     'k':0.5,           # [-] extinction coefficient of canopy
+     'm':0.1,           # [-] leaf transmission coefficient
+     'M':0.02,          # [d-1] maintenance respiration coefficient
+     'mu_m':0.5,        # [d-1] max. structural specific growth rate
+     'P0':0.432,        # [kgCO2 m-2 d-1] max photosynthesis parameter
+     'phi':0.9,         # [-] photoshynth. fraction for growth
+     'Tmin':0.0,        # [°C] maximum temperature for growth
+     'Topt':20.0,       # [°C] minimum temperature for growth
+     'Tmax':42.0,       # [°C] optimum temperature for growth
+     'Y':0.75,          # [-] structure fraction from storage
+     'z':1.33           # [-] bell function power
      }
 # Parameters adjusted manually to obtain growth
 # TODO: If needed, adjust the values for 2 or 3 parameters to obtain growth
@@ -47,20 +46,20 @@ p = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
 # PAR [J m-2 d-1], environment temperature [°C], and
 # water availability index [-]
 # TODO: Fill in sensible constant values for T and I0.
-d = {'I0': np.array([tsim, np.full((tsim.size,), 20.0)]).T,
-     'T': np.array([tsim, np.full((tsim.size,), 23.0)]).T,
-     'WAI': np.array([tsim, np.full((tsim.size,), 10.0)]).T
+d = {'I0':np.array([tsim, np.full((tsim.size,), 800.0*(100**2))]).T,
+     'T':np.array([tsim, np.full((tsim.size,), 20.0)]).T,
+     'WAI':np.array([tsim, np.full((tsim.size,),1.0)]).T
      }
 
 # Controlled inputs
-u = {'f_Gr': 5e-8, 'f_Hr':5e-9}  # [kgDM m-2 d-1]
+u = {'f_Gr':0, 'f_Hr':0}            # [kgDM m-2 d-1]
 
 # Initialize grass module
-grass = Grass(tsim, dt, x0, p)
+grass = Grass(tsim,dt,x0,p)
 
 # Run simulation
-tspan = (tsim[0], tsim[-1])
-y_grass = grass.run(tspan, d, u)
+tspan = (tsim[0],tsim[-1])
+y_grass = grass.run(tspan,d,u)
 
 # Retrieve simulation results
 # assuming 0.4 kgC/kgDM (Mohtar et al. 1997, p. 1492)
@@ -75,3 +74,5 @@ plt.figure(1)
 plt.plot(t_grass, WsDM)
 plt.plot(t_grass, WgDM)
 plt.show()
+
+

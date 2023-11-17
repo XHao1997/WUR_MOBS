@@ -50,13 +50,13 @@ def fcn_y(p0):
     # it is best to compute the residuals based on numpy arrays.
     # We use rows for time, and columns for model outputs.
     # TODO: retrieve the model outputs into a numpy array for populations 'pop'
-    pop = ???
+    pop = y['pred2']+y['prey2']
     return pop
 
 # Run calibration function
 # -- Exercise 3.1. Estimate p1 and p2
 # -- Exercise 3.2. estimate p1 and p3
-p0 = np.array([0.01/30, 0.01/30]) # Initial guess
+p0 = np.array([0.01/30, 0.1/30]) # Initial guess
 y_ls = least_squares(fcn_residuals, p0,
                      bounds = ([1E-6, 1E-6], [np.inf, np.inf]),
                      args=(fcn_y, lv.t, t_data, y_data),
@@ -68,9 +68,13 @@ y_calib_acc = fcn_accuracy(y_ls)
 # Run model output function with the estimated parameters
 p_hat_arr = y_ls['x']
 y_hat = fcn_y(p_hat_arr)
-
+y0 = fcn_y(p0)
 # Plot calibrated model
 # -- Exercise 3.1 and 3.2
 # TODO: plot the model output based on the estimated parameters,
+
 # together with the data.
 plt.figure('Calibrated model and data')
+plt.plot(tsim,y_hat)
+plt.plot(tsim,y0)
+plt.show()

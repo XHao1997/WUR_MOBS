@@ -21,36 +21,27 @@ t_ini = "20160101"
 t_end = "20161231"
 print(os.getcwd())
 data_weather = pd.read_csv(
-    '../../data/temp.csv', #  to move up one directory from current directory
-    usecols = ['YYYYMMDD', 'TG', 'Q', 'RH'], # columns to use
-    index_col = 0, # column with row names from used columns, 0-indexed
-    )
-data_grass = pd.read_csv("../../data/temp_real.csv",usecols=['X','Y'])
-t_grass_data = np.arange(0,252,0.1)
-
-# data_weather = pd.read_csv(
-#     '../../data/temp.csv', #  to move up one directory from current directory
-#     skipinitialspace=True, # ignore spaces after comma separator
-#     header = 47-3, # row with column names, 0-indexed, excluding spaces
-#     sep=',',
-#     usecols = ['YYYYMMDD', 'TG', 'Q', 'RH'], # columns to use
-#     index_col = 0, # column with row names from used columns, 0-indexed
-#     )
+    '../../data/temp.csv',  # to move up one directory from current directory
+    usecols=['YYYYMMDD', 'TG', 'Q', 'RH'],  # columns to use
+    index_col=0,  # column with row names from used columns, 0-indexed
+)
+data_grass = pd.read_csv("../../data/temp_real.csv", usecols=['X', 'Y'])
+t_grass_data = np.arange(0, 252, 0.1)
 
 print(data_weather.head())
 plt.style.use('ggplot')
 
 # Grass data
 # TODO: define numpy arrays with measured grass data in the Netherlands
-t_grass_data = np.arange(0,252,0.1)
-y_int = np.interp(t_grass_data,data_grass['X'],data_grass['Y'])
+t_grass_data = np.arange(0, 252, 0.1)
+y_int = np.interp(t_grass_data, data_grass['X'], data_grass['Y'])
 m_grass = np.zeros_like(t_grass_data)
 for i in range(t_grass_data.shape[0]):
     m_grass[i] = np.trapz(y_int[:i], np.array(t_grass_data[:i]))
 
 # Simulation time
-tsim = np.linspace(0.0, 365.0, 365+1) # [d]
-dt = 1 # [d]
+tsim = np.linspace(0.0, 365.0, 365 + 1)  # [d]
+dt = 1  # [d]
 
 # Initial conditions
 # TODO: define sensible values for the initial conditions
@@ -107,6 +98,6 @@ fig, ax = plt.subplots()
 ax.set_xlabel(r'day', fontsize=10)
 ax.set_ylabel(u'grass mass ($\mathregular{kgCm^{-2}}$)', fontsize=10)
 ax.set_title('grass yield per day')
-ax.scatter(t_grass_data,m_grass,s=1)
+ax.scatter(t_grass_data, m_grass, s=1)
 plt.tight_layout()
 plt.show()

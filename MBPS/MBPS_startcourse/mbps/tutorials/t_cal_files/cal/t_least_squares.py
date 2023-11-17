@@ -10,10 +10,8 @@ Exercises 1
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
 from scipy.optimize import least_squares
-import numpy.linalg as LA
-
+from mbps.functions.calibration import fcn_accuracy
 plt.style.use('ggplot')
 
 # -- EXERCISE 1.1 --
@@ -107,23 +105,27 @@ Np = J.shape[1]
 # Residuals
 # TODO: Retrieve the residuals from y_ls
 e = y_lsq['fun']
+print("ylsq\n{}".format(y_lsq))
 # Variance of residuals
 # TODO: Calculate the variance of residuals
 e_var = e.T.dot(e) / (N - Np)
 
 # Covariance matric of parameter estimates
 # TODO: Calculate the covariance matrix
-p_cov = e_var * np.linalg.inv((J.T.dot(J)))
+p_cov = e_var * np.linalg.inv(J.T.dot(J))
 # Standard deviations of parameter estimates
 # TODO: Calculate the variance and standard error
-
 p_var = p_cov.diagonal()
+print(p_var)
 p_std = np.sqrt(p_var)
-# print(np.flipud(p_cov).diagonal())
-ccp = (p_cov)/np.prod(p_std)
-print(p_cov)
-# Correlation coefficients of parameter estimates
+p_cor = np.zeros_like(p_cov)
+for i, pi in enumerate(p_std):
+    for j, pj in enumerate(p_std):
+        p_cor[i, j] = p_cov[i, j] / (pi * pj)
 
+print(p_cor)
+# Correlation coefficients of parameter estimates
+fcn_accuracy(y_lsq)
 # TODO: Calculate the correlation coefficients
 # (you can use a nested for-loop, i.e., a for-loops inside another)
 

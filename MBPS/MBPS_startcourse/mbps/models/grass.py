@@ -11,7 +11,7 @@ import numpy as np
 
 from mbps.classes.module import Module
 from mbps.functions.integration import fcn_euler_forward
-from mbps.t_grass_growth.t_grass_growth_3 import fuc_Tl2
+from mbps.tutorials.t_grass_growth.t_grass_growth_3 import fuc_Tl2
 
 
 class Grass(Module):
@@ -119,7 +119,7 @@ class Grass(Module):
         a = self.p['a']  # [m2 kgC-1] structural specific leaf area
         alpha = self.p['alpha']  # [kgCO2 J-1] leaf photosynthetic efficiency
         beta = self.p['beta']
-        gama = self.p['gama']
+        gama = 0
         k = self.p['k']
         m = self.p['m']
         M = self.p['M']
