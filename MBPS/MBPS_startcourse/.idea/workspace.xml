@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee56e85e-f007-4998-a1c7-a40155dc91d6" name="Changes" comment="refactor layout">
-      <change beforePath="$PROJECT_DIR$/.idea/MBPS_startcourse.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MBPS_startcourse.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ee56e85e-f007-4998-a1c7-a40155dc91d6" name="Changes" comment="tutorial for cal finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_lotka-volterra_cal.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/tutorials/t_cal_files/cal/t_lotka-volterra_cal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mbps/case1_files/grass_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/mbps/case1_files/grass_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +26,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectId" id="2XnwmL0dqeG40KKlY0fqC0vmAuh" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -55,7 +56,7 @@
       <recent name="C:\Users\Hao Xu\Desktop\WUR_MOBS\MBPS\MBPS_startcourse\mbps\models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.t_lotka-volterra_cal">
+  <component name="RunManager" selected="Python.t_water">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="MBPS_startcourse" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -69,27 +70,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="grass_sa" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="MBPS_startcourse" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="D:\Users\Hao_Xu\anaconda3\envs\wur_mbps\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mbps/case1_files" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mbps/case1_files/grass_sa.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -182,13 +162,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="t_water" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="MBPS_startcourse" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="D:\Users\Hao_Xu\anaconda3\envs\wur_mbps\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/mbps/tutorials/t_water" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mbps/tutorials/t_water/t_water.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.t_water" />
+        <item itemvalue="Python.grass_test" />
         <item itemvalue="Python.t_lotka-volterra_cal" />
         <item itemvalue="Python.t_log_growth_cal" />
-        <item itemvalue="Python.grass_test" />
         <item itemvalue="Python.t_least_squares" />
-        <item itemvalue="Python.grass_sa" />
       </list>
     </recent_temporary>
   </component>
@@ -229,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1700155623432</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="tutorial for cal finished">
+      <created>1700243458761</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1700243458761</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -248,6 +256,7 @@
     <MESSAGE value="update to the grass model" />
     <MESSAGE value="update to create mass of grass" />
     <MESSAGE value="refactor layout" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor layout" />
+    <MESSAGE value="tutorial for cal finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="tutorial for cal finished" />
   </component>
 </project>
