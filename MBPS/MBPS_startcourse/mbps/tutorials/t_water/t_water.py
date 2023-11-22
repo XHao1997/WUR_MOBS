@@ -40,7 +40,7 @@ Rn = 0.408 * Irr_gl * 1 - (alb)  # [MJ m-2 d-1] Net radiation
 # Exercise 1. Pvs, Delta
 # Exercise 2. ET0
 def fcn_vap_pressure(t, y):
-    dydt = 5304 * np.exp(21.3 - (5304 / t)) / (np.power(t,2))
+    dydt = 5304 * np.exp(21.3 - (5304 / (t+273))) / (np.power((t+273),2))
     print(np.exp(21.3 - (5304 / t)))
     return dydt
 
@@ -49,7 +49,7 @@ def fuc_ET0(delta):
     return alpha * Rn * delta / (delta + gamma)
 
 
-y0 = np.array([10])
+y0 = np.array([Pvs_data[0,0]])
 sol = solve_ivp(fcn_vap_pressure, tspan, y0, method='RK45',t_eval=tsim,rtol=1E-8, atol=1E-8)
 plt.plot(sol.t.ravel(), sol.y.ravel())
 
