@@ -1,17 +1,16 @@
-from mbps.functions.calibration import fcn_residuals
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib import colormaps
+from scipy.optimize import least_squares
 
+from mbps.functions.calibration import fcn_residuals, fcn_accuracy
 from mbps.models.grass_sol import Grass
 from mbps.models.water_sol import Water
-from scipy.optimize import least_squares
 
 plt.style.use('ggplot')
 
 # Simulation time
-tsim = np.linspace(0, 365, int(365 / 5) + 1)  # [d]
+tsim = np.linspace(0, 365, 365 + 1)  # [d]
 
 # Weather data (disturbances shared across models)
 t_ini = '19950101'
@@ -53,6 +52,7 @@ I0 = 0.45 * I_gl * 1E4 / dt_grs  # [J cm-2 d-1] to [J m-2 d-1] Global irr. to PA
 
 d_grs = {'T': np.array([t_weather, T]).T,
          'I0': np.array([t_weather, I0]).T,
+         'WAI': np.array([t_weather, np.full((t_weather.size,), 1.0)]).T
          }
 
 # Initialize module
@@ -63,8 +63,8 @@ dt_wtr = 1  # [d]
 
 # Initial conditions
 # TODO: Specify suitable initial conditions for the soil water sub-model
-# x0_wtr = {'L1': 0.36 * 150, 'L2': 0.32 * 250, 'L3': 0.24 * 600, 'DSD': 1}  # 3*[mm], [d]
-x0_wtr = {'L1': 54, 'L2': 80, 'L3': 144, 'DSD': 1}  # 3*[mm], [d]
+x0_wtr = {'L1': 0.36 * 150, 'L2': 0.32 * 250, 'L3': 0.24 * 600, 'DSD': 1}  # 3*[mm], [d]
+# x0_wtr = {'L1': 54, 'L2': 80, 'L3': 144, 'DSD': 1}  # 3*[mm], [d]
 
 # Castellaro et al. 2009, and assumed values for soil types and layers
 p_wtr = {'alpha': 1.29E-6,  # [mm J-1] Priestley-Taylor parameter
@@ -108,13 +108,27 @@ d_wtr = {'I_glb': np.array([t_weather, I_glb]).T,
 # Initialize module
 water = Water(tsim, dt_wtr, x0_wtr, p_wtr)
 
+# Grass data. (Organic matter assumed equal to DM) [gDM m-2]
+# Groot and Lantinga (2004)
+t_data = np.array([107, 114, 122, 129, 136, 142, 149, 156])
+m_data = np.array([156., 198., 333., 414., 510., 640., 663., 774.])
+m_data = m_data / 1E3
 
-# %% Simulation function
-def fnc_y():
+
+def fnc_y(p0):
     # Reset initial conditions
     grass.x0 = x0_grs.copy()
     water.x0 = x0_wtr.copy()
 
+    # Model parameters
+    grass.p['alpha'] = p0[0]
+    water.p['kcrop'] = p0[1]
+    water.p['WAIc'] = p0[2]
+    grass.p['a'] = p0[3]
+    # grass.p['beta'] = p0[3]
+    # water.p['D3'] = p0[5]
+
+    # Run simulation
     # Initial disturbance
     d_grs['WAI'] = np.array([[0, 1, 2, 3, 4], [1., ] * 5]).T
 
@@ -138,46 +152,31 @@ def fnc_y():
         # Retrieve water model outputs for grass model
         d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
 
-    # Return result of interest (WgDM [kgDM m-2])
     return grass.y['Wg'] / 0.4
-# Grass data. (Organic matter assumed equal to DM) [gDM m-2]
-# Groot and Lantinga (2004)
-t_data = np.array([107, 114, 122, 129, 136, 142, 149, 156])
-m_data = np.array([156., 198., 333., 414., 510., 640., 663., 774.])
-m_data = m_data / 1E3
 
 
-def fnc_y(p0):
-    # Reset initial conditions
-    grass.x0 = x0_grs.copy()
-    water.x0 = x0_wtr.copy()
+p0 = [p_grs['alpha'], p_wtr['kcrop'], p_wtr['WAIc'], p_grs['a']]
 
-    # Model parameters
-    # TODO: specify 4 relevant parameters to estimate.
-    # (these may not necessarily be the ones that you adjusted manually before)
-    grass.p['alpha'] = p0[0]
-    water.p['kcrop'] = p0[1]
-    # grass.p['Y'] = p0[2]
-    # grass.p['alpha'] = p0[3]
+bnds = ((4e-10, 0.0, 0.5, 0), (4e-2, 10, 0.85, 1000))
+y_ls = least_squares(fcn_residuals, p0, bounds=bnds, args=(fnc_y, grass.t, t_data, m_data),
+                     kwargs={'plot_progress': True})
+# Calibration accuracy
+y_calib_acc = fcn_accuracy(y_ls)
 
-    # Controlled inputs
-    u = {'f_Gr': 0, 'f_Hr': 0}  # [kgC m-2 d-1]
+# Run calibrated simulation
+# TODO: Retrieve the parameter estimates from
+# the output of the least_squares function
+p_hat = y_ls['x']
 
-    # Run simulation
-    tspan = (tsim[0], tsim[-1])
-    y_grass = grass.run(tspan, d, u)
-    y_water = water.run(tspan, d, u)
+# TODO: Run the model output simulation function with the estimated parameters
+# (this is the calibrated model output)
+WgDM_hat = fnc_y(p_hat)
 
-    # Return result of interest (WgDM [kgDM m-2])
-    # assuming 0.4 kgC/kgDM (Mohtar et al. 1997, p. 1492)
-    return y_grass['Wg'] / 0.4
-
-
-# %% Sensitivity analysis
-# Run reference simulation
-WgDM = fnc_y()
-
-p0 = np.array([p_grs['alpha'], p_wtr['kcrop']])
-bunds = ((2e-10, 0.85), (2e-7, 1))
-y_ls = least_squares(fcn_residuals, p0, bounds=bunds, args=(fnc_y, grass.t, t_data,m_data),kwargs={'plot_progress':True})
-# fcn_residuals(p0)
+# -- Plot results --
+# TODO: Make one figure comparing the calibrated model against
+# the measured data
+plt.figure('Calibration alpha & mu_m')
+plt.plot(grass.t, WgDM_hat, label='Calibrated model')
+plt.plot(t_data, m_data, label='Measured data')
+plt.legend()
+plt.show()

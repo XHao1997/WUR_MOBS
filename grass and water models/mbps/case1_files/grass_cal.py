@@ -12,8 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
 
-from mbps.case1_files.grass_sol import Grass
-from mbps.tutorials.t_cal_files.calibration import fcn_residuals, fcn_accuracy
+from mbps.models import Grass
+from mbps.functions.calibration import fcn_residuals, fcn_accuracy
 
 plt.style.use('ggplot')
 
