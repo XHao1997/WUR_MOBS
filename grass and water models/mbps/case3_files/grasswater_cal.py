@@ -30,14 +30,16 @@ dt_grs = 1  # [d]
 
 # Initial conditions
 # TODO: Specify suitable initial conditions for the grass sub-model
-x0_grs = {'Ws': 1e-2, 'Wg': 3e-2}  # [kgC m-2]
-
+x0_grs = {'Ws': 5.2e-3, 'Wg': 1.20e-2}  # [kgC m-2]
 # Model parameters (as provided by Mohtar et al. 1997 p.1492-1493)
 p_grs = {'a': 40.0, 'alpha': 4e-9, 'beta': 0.025, 'k': 0.5, 'm': 0.1, 'M': 0.02, 'mu_m': 0.5, 'P0': 0.432, 'phi': 0.9,
          'Tmin': 0.0, 'Topt': 20.0, 'Tmax': 42.0, 'Y': 0.75, 'z': 1.33}
+# p0 = [p_grs['alpha'], p_wtr['kcrop'], p_grs['Y'], p_grs['Tmin'], p_grs['beta']]
+
 # Model parameters adjusted manually to obtain growth
-# p_grs['alpha'] = 8e-9
-# p_grs['beta'] = 0.01
+p_grs['alpha'] = 9e-9
+p_grs['beta'] = 0.01
+p_grs['Tmin'] = 4
 # TODO: Adjust a few parameters to obtain growth.
 # Satrt by using the modifications from Case 1.
 # If needed, adjust further those or additional parameters
@@ -122,9 +124,12 @@ def fnc_y(p0):
 
     # Model parameters
     grass.p['alpha'] = p0[0]
-    water.p['kcrop'] = p0[1]
-    water.p['WAIc'] = p0[2]
-    grass.p['a'] = p0[3]
+    water.p['WAIc'] = p0[1]
+    # grass.p['phi'] = p0[2]
+    # grass.p['Y'] = p0[2]
+    grass.p['Tmin'] = p0[2]
+    # grass.p['beta'] = p0[3]
+
     # grass.p['beta'] = p0[3]
     # water.p['D3'] = p0[5]
 
@@ -155,9 +160,14 @@ def fnc_y(p0):
     return grass.y['Wg'] / 0.4
 
 
-p0 = [p_grs['alpha'], p_wtr['kcrop'], p_wtr['WAIc'], p_grs['a']]
+p0 = [p_grs['alpha'], p_wtr['WAIc'], p_grs['Tmin']]
+# p0 = [p_grs['alpha'], p_grs['beta']]
 
-bnds = ((4e-10, 0.0, 0.5, 0), (4e-2, 10, 0.85, 1000))
+bnds = ((4e-10, 0.5,  0, 0.01), (4e-2, 1,  10, 0.05))
+bnds = ((4e-10, 0.5,  0), (4e-2, 1,  10))
+
+# bnds = ((4e-10,  0.01), (4e-8, 0.05))
+
 y_ls = least_squares(fcn_residuals, p0, bounds=bnds, args=(fnc_y, grass.t, t_data, m_data),
                      kwargs={'plot_progress': True})
 # Calibration accuracy

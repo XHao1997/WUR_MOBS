@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import least_squares
 
-from mbps.models import Grass
+from mbps.models.grass import Grass
 from mbps.functions.calibration import fcn_residuals, fcn_accuracy
 
 plt.style.use('ggplot')
@@ -37,7 +37,7 @@ t_ini = '19950101'
 t_end = '19960101'
 t_weather = np.linspace(0, 365, 365+1)
 data_weather = pd.read_csv(
-    'etmgeg_260.csv', #  to move up one directory from current directory
+    '../../data/etmgeg_260.csv', #  to move up one directory from current directory
     skipinitialspace=True, # ignore spaces after comma separator
     header = 47-3, # row with column names, 0-indexed, excluding spaces
     sep=',',
