@@ -44,7 +44,7 @@ def fcn_euler_forward(diff, t_span, y0, h=1.0):
         Values of the solution at `t`.
     """
     # Number of elements for integration time and model outputs
-    nt = int((t_span[1]-t_span[0])/h) + 1
+    nt = round((t_span[1]-t_span[0])/h) + 1
     # Vectors for integration time and model outputs
     tint = np.linspace(t_span[0], t_span[1], nt)
     yint = np.zeros((y0.size, tint.size))

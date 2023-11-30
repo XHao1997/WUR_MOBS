@@ -7,9 +7,9 @@ from mbps.models.water_sol import Water
 plt.style.use('ggplot')
 
 # Simulation time
-tsim = np.linspace(0, 24*365,  int(365) + 1)  # [d]
+tsim = np.linspace(0, 365,  24*int(365) + 1)  # [d]
 
-t_weather = np.linspace(0, 24 *365, 24 * 365 + 1)
+t_weather = np.linspace(0, 365, 24 * 365 + 1)
 
 data_weather = pd.read_csv(
     '../../data/uurgeg_260_2011-2020.csv',  # .. to move up one directory from current directory
@@ -34,7 +34,7 @@ m_data = m_data / 1E3
 
 # ---- Grass sub-model
 # Step size
-dt_grs = 1  # [d]
+dt_grs = 1/24  # [d]
 
 # Initial conditions
 # TODO: Specify suitable initial conditions for the grass sub-model
@@ -69,9 +69,8 @@ p_grs['beta'] = 0.025
 T = data_weather.loc[t_ini:t_end, 'T'].values  # [0.1 °C] Env. temperature
 I_gl = data_weather.loc[t_ini:t_end, 'Q'].values  # [J cm-2 d-1] Global irr.
 
-
 T = T / 10  # [0.1 °C] to [°C] Environment temperature
-I0 = 0.45 * I_gl * 1E4  # [J cm-2 d-1] to [J m-2 d-1] Global irr. to PAR
+I0 = 0.45 * I_gl * 1E4 / dt_grs  # [J cm-2 d-1] to [J m-2 d-1] Global irr. to PAR
 
 d_grs = {'T': np.array([t_weather, T]).T,
          'I0': np.array([t_weather, I0]).T,
@@ -81,8 +80,7 @@ d_grs = {'T': np.array([t_weather, T]).T,
 grass = Grass(tsim, dt_grs, x0_grs, p_grs)
 
 # ---- Water sub-model
-dt_wtr = 1  # [d]
-
+dt_wtr = 1/24  # [d]
 # Initial conditions
 # TODO: Specify suitable initial conditions for the soil water sub-model
 x0_wtr = {'L1': 54, 'L2': 80, 'L3': 144, 'DSD': 1}  # 3*[mm], [d]
@@ -154,7 +152,7 @@ for ti in it:
     d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
 
 # Retrieve simulation results
-t_grs, t_wtr = grass.t/24, water.t/24
+t_grs, t_wtr = grass.t, water.t
 WsDM, WgDM, LAI = grass.y['Ws'] / 0.4, grass.y['Wg'] / 0.4, grass.y['LAI']
 L1, L2, L3 = water.y['L1'], water.y['L2'], water.y['L3'],
 WAI = water.y['WAI']
