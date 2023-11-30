@@ -16,7 +16,6 @@ from matplotlib import colormaps
 from mbps.models.grass_sol import Grass
 from mbps.models.water_sol import Water
 
-
 plt.style.use('ggplot')
 
 # Simulation time
@@ -75,7 +74,6 @@ dt_wtr = 1  # [d]
 # x0_wtr = {'L1': 0.36 * 150, 'L2': 0.32 * 250, 'L3': 0.24 * 600, 'DSD': 1}  # 3*[mm], [d]
 x0_wtr = {'L1': 54, 'L2': 80, 'L3': 144, 'DSD': 1}  # 3*[mm], [d]
 
-
 # Castellaro et al. 2009, and assumed values for soil types and layers
 p_wtr = {'alpha': 1.29E-6,  # [mm J-1] Priestley-Taylor parameter
          'gamma': 0.68,  # [mbar °C-1] Psychrometric constant
@@ -118,43 +116,47 @@ d_wtr = {'I_glb': np.array([t_weather, I_glb]).T,
 # Initialize module
 water = Water(tsim, dt_wtr, x0_wtr, p_wtr)
 
+model = (grass, water)
+x0 = (x0_grs, x0_wtr)
 
-# %% Simulation function
-def fnc_y():
-    # Reset initial conditions
-    grass.x0 = x0_grs.copy()
-    water.x0 = x0_wtr.copy()
+d = (d_grs, d_wtr)
 
-    # Initial disturbance
-    d_grs['WAI'] = np.array([[0, 1, 2, 3, 4], [1., ] * 5]).T
-
-    # Iterator
-    # (stop at second-to-last element, and store index in Fortran order)
-    it = np.nditer(tsim[:-1], flags=['f_index'])
-    for ti in it:
-        # Index for current time instant
-        idx = it.index
-        # Integration span
-        tspan = (tsim[idx], tsim[idx + 1])
-        # Controlled inputs
-        u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
-        u_wtr = {'f_Irg': 0}  # [mm d-1]
-        # Run grass model
-        y_grs = grass.run(tspan, d_grs, u_grs)
-        # Retrieve grass model outputs for water model
-        d_wtr['LAI'] = np.array([y_grs['t'], y_grs['LAI']])
-        # Run water model    
-        y_wtr = water.run(tspan, d_wtr, u_wtr)
-        # Retrieve water model outputs for grass model
-        d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
-
-    # Return result of interest (WgDM [kgDM m-2])
-    return grass.y['Wg'] / 0.4
+# # %% Simulation function
+# def fnc_y():
+#     # Reset initial conditions
+#     grass.x0 = x0_grs.copy()
+#     water.x0 = x0_wtr.copy()
+#
+#     # Initial disturbance
+#     d_grs['WAI'] = np.array([[0, 1, 2, 3, 4], [1., ] * 5]).T
+#
+#     # Iterator
+#     # (stop at second-to-last element, and store index in Fortran order)
+#     it = np.nditer(tsim[:-1], flags=['f_index'])
+#     for ti in it:
+#         # Index for current time instant
+#         idx = it.index
+#         # Integration span
+#         tspan = (tsim[idx], tsim[idx + 1])
+#         # Controlled inputs
+#         u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
+#         u_wtr = {'f_Irg': 0}  # [mm d-1]
+#         # Run grass model
+#         y_grs = grass.run(tspan, d_grs, u_grs)
+#         # Retrieve grass model outputs for water model
+#         d_wtr['LAI'] = np.array([y_grs['t'], y_grs['LAI']])
+#         # Run water model
+#         y_wtr = water.run(tspan, d_wtr, u_wtr)
+#         # Retrieve water model outputs for grass model
+#         d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
+#
+#     # Return result of interest (WgDM [kgDM m-2])
+#     return grass.y['Wg'] / 0.4
 
 
 # %% Sensitivity analysis
 # Run reference simulation
-WgDM = fnc_y()
+WgDM = fnc_y(model, x0, d, tsim)
 
 # Initialize NS arrays for grass model
 n_grs_rows, n_grs_cols = WgDM.size, len(p_grs.keys())

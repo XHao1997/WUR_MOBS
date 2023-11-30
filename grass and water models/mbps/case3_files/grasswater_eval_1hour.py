@@ -1,40 +1,30 @@
-# -*- coding: utf-8 -*-
-"""
-FTE34806 - Modelling of Biobased Production Systems
-MSc Biosystems Engineering, WUR
-@authors:   Daniel Reyes Lastiri, Stefan Maranus,
-            Rachel van Ooteghem, Tim Hoogstad
-
-Evaluation of the grass & water model
-"""
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 from mbps.models.grass_sol import Grass
 from mbps.models.water_sol import Water
-import os
-
 plt.style.use('ggplot')
 
 # Simulation time
-tsim = np.linspace(0, 2*365, int(2*365 / 5) + 1)  # [d]
+tsim = np.linspace(0, 24*365,  int(365) + 1)  # [d]
 
-# Weather data (disturbances shared across models)
-t_ini = '19950101'
-t_end = '19961231'
-t_weather = np.linspace(0, 2*365, 2*365 + 1)
-# curent_dir = os.getcwd()
-# data_path = curent_dir+'/data/etmgeg_260.csv'
-# print(data_path)
+t_weather = np.linspace(0, 24 *365, 24 * 365 + 1)
+
 data_weather = pd.read_csv(
-    '../..//data/etmgeg_260.csv',  # .. to move up one directory from current directory
+    '../../data/uurgeg_260_2011-2020.csv',  # .. to move up one directory from current directory
     skipinitialspace=True,  # ignore spaces after comma separator
-    header=47 - 3,  # row with column names, 0-indexed, excluding spaces
-    usecols=['YYYYMMDD', 'TG', 'Q', 'RH'],  # columns to use
-    index_col=0,  # column with row names from used columns, 0-indexed
+    header=31 - 3,  # row with column names, 0-indexed, excluding spaces
+    usecols=['YYYYMMDD', 'HH', 'T', 'Q', 'RH'],  # columns to use
 )
+
+data_weather['HH'] = pd.to_timedelta(data_weather['HH'],unit='h')
+data_weather['HH'] = data_weather['HH'].astype(str).map(lambda x: x[7:])
+data_weather['date_time'] = pd.to_datetime(data_weather['YYYYMMDD'].astype(str)+ ' ' + data_weather['HH'])
+data_weather = data_weather.set_index('date_time')
+# Weather data (disturbances shared across models)
+t_ini = '2011-01-01 01:00:00'
+t_end = '2012-01-01 01:00:00'
 
 # Grass data. (Organic matter assumed equal to DM) [gDM m-2]
 # Groot and Lantinga (2004)
@@ -70,18 +60,18 @@ p_grs = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
 # TODO: Adjust a few parameters to obtain growth.
 # Satrt by using the modifications from Case 1.
 # If needed, adjust further those or additional parameters
-p_grs['alpha'] = 8e-9
-p_grs['beta'] = 0.01
-# p_grs['a'] = 18.27
+p_grs['alpha'] = 4e-9
+p_grs['beta'] = 0.025
 # p_grs['gamma'] = 0.0
 
 # Disturbances
 # PAR [J m-2 d-1], environment temperature [°C], leaf area index [-]
-T = data_weather.loc[t_ini:t_end, 'TG'].values  # [0.1 °C] Env. temperature
+T = data_weather.loc[t_ini:t_end, 'T'].values  # [0.1 °C] Env. temperature
 I_gl = data_weather.loc[t_ini:t_end, 'Q'].values  # [J cm-2 d-1] Global irr.
 
+
 T = T / 10  # [0.1 °C] to [°C] Environment temperature
-I0 = 0.45 * I_gl * 1E4 / dt_grs  # [J cm-2 d-1] to [J m-2 d-1] Global irr. to PAR
+I0 = 0.45 * I_gl * 1E4  # [J cm-2 d-1] to [J m-2 d-1] Global irr. to PAR
 
 d_grs = {'T': np.array([t_weather, T]).T,
          'I0': np.array([t_weather, I0]).T,
@@ -122,7 +112,7 @@ p_wtr = {'S': 10,  # [mm d-1] parameter of precipitation retention
 # Disturbances
 # global irradiance [J m-2 d-1], environment temperature [°C],
 # precipitation [mm d-1], leaf area index [-].
-T = data_weather.loc[t_ini:t_end, 'TG'].values  # [0.1 °C] Env. temperature
+T = data_weather.loc[t_ini:t_end, 'T'].values  # [0.1 °C] Env. temperature
 I_glb = data_weather.loc[t_ini:t_end, 'Q'].values  # [J cm-2 d-1] Global irr.
 f_prc = data_weather.loc[t_ini:t_end, 'RH'].values  # [0.1 mm d-1] Precipitation
 f_prc[f_prc < 0.0] = 0  # correct data that contains -0.1 for very low values
@@ -135,14 +125,12 @@ d_wtr = {'I_glb': np.array([t_weather, I_glb]).T,
          'T': np.array([t_weather, T]).T,
          'f_prc': np.array([t_weather, f_prc]).T,
          }
-
 # Initialize module
 water = Water(tsim, dt_wtr, x0_wtr, p_wtr)
 
 # ---- Run simulation
 # Initial disturbance
 d_grs['WAI'] = np.array([[0, 1, 2, 3, 4], [1., ] * 5]).T
-
 # Iterator
 # (stop at second-to-last element, and store index in Fortran order)
 it = np.nditer(tsim[:-1], flags=['f_index'])
@@ -151,6 +139,7 @@ for ti in it:
     idx = it.index
     # Integration span
     tspan = (tsim[idx], tsim[idx + 1])
+    print(tspan)
     print('Integrating', tspan)
     # Controlled inputs
     u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
@@ -165,10 +154,11 @@ for ti in it:
     d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
 
 # Retrieve simulation results
-t_grs, t_wtr = grass.t, water.t
+t_grs, t_wtr = grass.t/24, water.t/24
 WsDM, WgDM, LAI = grass.y['Ws'] / 0.4, grass.y['Wg'] / 0.4, grass.y['LAI']
 L1, L2, L3 = water.y['L1'], water.y['L2'], water.y['L3'],
 WAI = water.y['WAI']
+
 
 # ---- Plots
 plt.figure(1)
@@ -196,7 +186,6 @@ ax2b.plot(t_grs, -grass.f['f_Hr'], label=r'$f_{Hr}$')
 ax2b.plot(t_grs, -grass.f['f_Gr'], label=r'$f_{Gr}$')
 ax2b.legend()
 ax2b.set_ylabel('flow rate ' + r'$[kgC\ m^{-2}\ d^{-1}]$')
-plt.show()
 
 plt.figure(3)
 plt.plot(t_wtr, L1, label='L1', color='g')
@@ -257,7 +246,8 @@ ax5c.plot(t_wtr, -water.f['f_Dr3'], label=r'$f_{Dr3}$')
 ax5c.legend()
 ax5c.set_ylabel('flow rate ' + r'$[mm\ d^{-1}]$')
 ax5c.set_xlabel('time ' + r'$[d]$')
-# plt.show()
+
+plt.show()
 # References
 # Groot, J.C.J., and Lantinga, E.A., (2004). An object oriented model
 #   of the morphological development and digestability of perennial
