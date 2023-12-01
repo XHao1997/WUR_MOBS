@@ -23,8 +23,8 @@ data_weather['HH'] = data_weather['HH'].astype(str).map(lambda x: x[7:])
 data_weather['date_time'] = pd.to_datetime(data_weather['YYYYMMDD'].astype(str)+ ' ' + data_weather['HH'])
 data_weather = data_weather.set_index('date_time')
 # Weather data (disturbances shared across models)
-t_ini = '2011-01-01 01:00:00'
-t_end = '2012-01-01 01:00:00'
+t_ini = '2016-01-01 01:00:00'
+t_end = '2016-12-31 01:00:00'
 
 # Grass data. (Organic matter assumed equal to DM) [gDM m-2]
 # Groot and Lantinga (2004)
@@ -128,7 +128,7 @@ water = Water(tsim, dt_wtr, x0_wtr, p_wtr)
 
 # ---- Run simulation
 # Initial disturbance
-d_grs['WAI'] = np.array([[0, 1, 2, 3, 4], [1., ] * 5]).T
+d_grs['WAI'] = np.array([[0], [1., ] * 1]).T
 # Iterator
 # (stop at second-to-last element, and store index in Fortran order)
 it = np.nditer(tsim[:-1], flags=['f_index'])

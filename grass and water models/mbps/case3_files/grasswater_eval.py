@@ -22,8 +22,8 @@ plt.style.use('ggplot')
 tsim = np.linspace(0, 365, int(365 / 5) + 1)  # [d]
 
 # Weather data (disturbances shared across models)
-t_ini = '19950101'
-t_end = '19960101'
+t_ini = '20160101'
+t_end = '20161231'
 t_weather = np.linspace(0, 365, 365 + 1)
 # curent_dir = os.getcwd()
 # data_path = curent_dir+'/data/etmgeg_260.csv'
