@@ -11,7 +11,7 @@ Evaluation of the grass & water model
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib import colormaps
+from matplotlib import cm
 
 from mbps.models.grass_sol import Grass
 from mbps.models.water_sol import Water
@@ -231,7 +231,7 @@ t_grs = grass.t
 t_wtr = water.t
 
 # Plots
-cmap = colormaps.get_cmap('tab10')
+cmap = cm.get_cmap('tab10')
 
 fig1, ((ax1a, ax1b), (ax1c, ax1d)) = plt.subplots(2, 2, sharex=True, sharey=True)
 ax1a.plot(t_grs, SNS_grs_pls[:, 0], label=r'$a+$', color=cmap(0))

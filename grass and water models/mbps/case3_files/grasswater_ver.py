@@ -22,14 +22,14 @@ plt.style.use('ggplot')
 tsim = np.linspace(0, 365, int(365 / 5) + 1)  # [d]
 
 # Weather data (disturbances shared across models)
-t_ini = '20160101'
-t_end = '20161231'
+t_ini = '19850101'
+t_end = '19860101'
 t_weather = np.linspace(0, 365, 365 + 1)
 # curent_dir = os.getcwd()
 # data_path = curent_dir+'/data/etmgeg_260.csv'
 # print(data_path)
 data_weather = pd.read_csv(
-    '../../data/daily_measurements_vlisssingen.csv',  # .. to move up one directory from current directory
+    '../../data/etmgeg_1984_1985_DeBilt.csv',  # .. to move up one directory from current directory
     skipinitialspace=True,
     header=10,  # row with column names, 0-indexed, excluding spaces
     usecols=['YYYYMMDD', 'TG', 'Q', 'RH'],  # columns to use
@@ -38,10 +38,9 @@ data_weather = pd.read_csv(
 
 # Grass data. (Organic matter assumed equal to DM) [gDM m-2]
 # Groot and Lantinga (2004)
-t_data = np.array([107, 114, 122, 129, 136, 142, 149, 156])
-m_data = np.array([156., 198., 333., 414., 510., 640., 663., 774.])
-m_data = m_data / 1E3
-
+t_data = np.array([112.78, 118.19, 125.63, 131.72, 137.81])
+m_data = np.array([1388.88, 1944.44, 2453.70, 3333.33, 3888.88])
+m_data = m_data / 1E4
 # ---- Grass sub-model
 # Step size
 dt_grs = 1  # [d]
@@ -67,14 +66,9 @@ p_grs = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
          'z': 1.33  # [-] bell function power
          }
 # Model parameters adjusted manually to obtain growth
-# TODO: Adjust a few parameters to obtain growth.
-# Satrt by using the modifications from Case 1.
-# Model parameters adjusted manually to obtain growth
-p_grs['alpha'] = 8.407E-09
-p_grs['beta'] = 0.01
-p_grs['Tmin'] = 4.681E+00
-
-
+p_grs['alpha'] = 9.000E-09
+p_grs['beta'] = 0.02
+p_grs['Tmin'] = 4.000E+00
 # Disturbances
 # PAR [J m-2 d-1], environment temperature [°C], leaf area index [-]
 T = data_weather.loc[t_ini:t_end, 'TG'].values  # [0.1 °C] Env. temperature
@@ -118,7 +112,8 @@ p_wtr = {'S': 10,  # [mm d-1] parameter of precipitation retention
          'krf3': 0.25,  # [-] Rootfraction layer 2 (guess)
          'mlc': 0.2,  # [-] Fraction of soil covered by mulching
          }
-p_wtr['WAIc'] = 7.888E-01
+
+p_wtr['WAIc'] = 7.500E-01
 # Disturbances
 # global irradiance [J m-2 d-1], environment temperature [°C],
 # precipitation [mm d-1], leaf area index [-].

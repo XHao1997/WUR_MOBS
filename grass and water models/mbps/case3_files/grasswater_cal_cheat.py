@@ -13,11 +13,11 @@ plt.style.use('ggplot')
 tsim = np.linspace(0, 365, 365 + 1)  # [d]
 
 # Weather data (disturbances shared across models)
-t_ini = '19950101'
-t_end = '19960101'
+t_ini = '19850101'
+t_end = '19860101'
 t_weather = np.linspace(1, 365, 365 + 1)
 data_weather = pd.read_csv(
-    '../../data/etmgeg_1995_2020_deelen.csv',  # .. to move up one directory from current directory
+    '../../data/etmgeg_1984_1985_DeBilt.csv',  # .. to move up one directory from current directory
     skipinitialspace=True,  # ignore spaces after comma separator
     header=10,  # row with column names, 0-indexed, excluding spaces
     usecols=['YYYYMMDD', 'TG', 'Q', 'RH'],  # columns to use
@@ -30,7 +30,7 @@ dt_grs = 1  # [d]
 
 # Initial conditions
 # TODO: Specify suitable initial conditions for the grass sub-model
-x0_grs = {'Ws': 5.2e-3, 'Wg': 1.20e-2}  # [kgC m-2]
+x0_grs = {'Ws': 5.2e-2, 'Wg': 1.20e-2}  # [kgC m-2]
 # Model parameters (as provided by Mohtar et al. 1997 p.1492-1493)
 p_grs = {'a': 40.0, 'alpha': 4e-9, 'beta': 0.025, 'k': 0.5, 'm': 0.1, 'M': 0.02, 'mu_m': 0.5, 'P0': 0.432, 'phi': 0.9,
          'Tmin': 0.0, 'Topt': 20.0, 'Tmax': 42.0, 'Y': 0.75, 'z': 1.33}
@@ -40,6 +40,7 @@ p_grs = {'a': 40.0, 'alpha': 4e-9, 'beta': 0.025, 'k': 0.5, 'm': 0.1, 'M': 0.02,
 p_grs['alpha'] = 9e-9
 p_grs['beta'] = 0.01
 p_grs['Tmin'] = 4
+p_grs['M'] = 0.04
 # TODO: Adjust a few parameters to obtain growth.
 # Satrt by using the modifications from Case 1.
 # If needed, adjust further those or additional parameters
@@ -115,6 +116,11 @@ water = Water(tsim, dt_wtr, x0_wtr, p_wtr)
 t_data = np.array([107, 114, 122, 129, 136, 142, 149, 156])
 m_data = np.array([156., 198., 333., 414., 510., 640., 663., 774.])
 m_data = m_data / 1E3
+# Grass data. (Organic matter assumed equal to DM) [gDM m-2]
+# Groot and Lantinga (2004)
+t_data = np.array([112.78, 118.19, 125.63, 131.72, 137.81])
+m_data = np.array([1388.88, 1944.44, 2453.70, 3333.33, 3888.88])
+m_data = m_data / 1E4
 
 
 def fnc_y(p0):
