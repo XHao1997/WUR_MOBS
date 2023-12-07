@@ -60,8 +60,8 @@ p_grs = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
 # TODO: Adjust a few parameters to obtain growth.
 # Satrt by using the modifications from Case 1.
 # If needed, adjust further those or additional parameters
-p_grs['alpha'] = 4e-9
-p_grs['beta'] = 0.025
+p_grs['alpha'] = 8e-9
+p_grs['beta'] = 0.01
 # p_grs['gamma'] = 0.0
 
 # Disturbances
