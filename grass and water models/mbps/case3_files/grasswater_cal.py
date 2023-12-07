@@ -37,9 +37,9 @@ p_grs = {'a': 40.0, 'alpha': 4e-9, 'beta': 0.025, 'k': 0.5, 'm': 0.1, 'M': 0.02,
 # p0 = [p_grs['alpha'], p_wtr['kcrop'], p_grs['Y'], p_grs['Tmin'], p_grs['beta']]
 
 # Model parameters adjusted manually to obtain growth
-p_grs['alpha'] = 9e-9
+p_grs['alpha'] = 10e-9
 p_grs['beta'] = 0.01
-p_grs['Tmin'] = 4
+p_grs['Tmin'] = 5
 # TODO: Adjust a few parameters to obtain growth.
 # Satrt by using the modifications from Case 1.
 # If needed, adjust further those or additional parameters
@@ -124,10 +124,10 @@ def fnc_y(p0):
 
     # Model parameters
     grass.p['alpha'] = p0[0]
-    water.p['WAIc'] = p0[1]
+    # water.p['WAIc'] = p0[1]
     # grass.p['phi'] = p0[2]
     # grass.p['Y'] = p0[2]
-    grass.p['Tmin'] = p0[2]
+    grass.p['Tmin'] = p0[1]
     # grass.p['beta'] = p0[3]
 
     # grass.p['beta'] = p0[3]
@@ -162,9 +162,12 @@ def fnc_y(p0):
 
 p0 = [p_grs['alpha'], p_wtr['WAIc'], p_grs['Tmin']]
 # p0 = [p_grs['alpha'], p_grs['beta']]
+p0 = [p_grs['alpha'], p_grs['Tmin']]
 
-bnds = ((4e-10, 0.5,  0, 0.01), (4e-2, 1,  10, 0.05))
+# bnds = ((4e-10, 0.5,  0, 0.01), (4e-2, 1,  10, 0.05))
 bnds = ((4e-10, 0.5,  0), (4e-2, 1,  10))
+bnds = ((4e-10, 0), (4e-2,  10))
+
 
 # bnds = ((4e-10,  0.01), (4e-8, 0.05))
 
@@ -187,6 +190,9 @@ WgDM_hat = fnc_y(p_hat)
 # the measured data
 plt.figure('Calibration alpha & mu_m')
 plt.plot(grass.t, WgDM_hat, label='Calibrated model')
-plt.plot(t_data, m_data, label='Measured data')
+plt.scatter(t_data, m_data, label='Measured data',color = 'b')
+plt.legend()
+plt.xlabel(r'$time\ [d]$')
+plt.ylabel(r'$grass\ biomass\ [kgDM\ m^{-2}]$')
 plt.legend()
 plt.show()

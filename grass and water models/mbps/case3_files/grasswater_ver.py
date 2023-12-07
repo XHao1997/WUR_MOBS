@@ -25,9 +25,7 @@ tsim = np.linspace(0, 365, int(365 / 5) + 1)  # [d]
 t_ini = '19850101'
 t_end = '19860101'
 t_weather = np.linspace(0, 365, 365 + 1)
-# curent_dir = os.getcwd()
-# data_path = curent_dir+'/data/etmgeg_260.csv'
-# print(data_path)
+
 data_weather = pd.read_csv(
     '../../data/etmgeg_1984_1985_DeBilt.csv',  # .. to move up one directory from current directory
     skipinitialspace=True,
@@ -66,9 +64,10 @@ p_grs = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
          'z': 1.33  # [-] bell function power
          }
 # Model parameters adjusted manually to obtain growth
-p_grs['alpha'] = 9.000E-09
+p_grs['alpha'] = 9E-09
 p_grs['beta'] = 0.02
-p_grs['Tmin'] = 4.000E+00
+p_grs['Tmin'] = 4.0
+
 # Disturbances
 # PAR [J m-2 d-1], environment temperature [°C], leaf area index [-]
 T = data_weather.loc[t_ini:t_end, 'TG'].values  # [0.1 °C] Env. temperature
