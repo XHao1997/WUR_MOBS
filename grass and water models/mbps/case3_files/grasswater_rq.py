@@ -23,8 +23,8 @@ plt.style.use('ggplot')
 tsim = np.linspace(0, 365, 365 + 1)  # [d]
 
 # Weather data (disturbances shared across models)
-t_ini = '20090101'
-t_end = '20100101'
+t_ini = '20040101'
+t_end = '20041231'
 t_weather = np.linspace(0, 365, 365 + 1)
 
 data_weather = pd.read_csv(
@@ -41,7 +41,7 @@ dt_grs = 1  # [d]
 
 # Initial conditions
 # TODO: Specify suitable initial conditions for the grass sub-model
-x0_grs = {'Ws': 5.2e-3, 'Wg': 1.20e-2}  # [kgC m-2]
+x0_grs = {'Ws': 1e-3, 'Wg': 1.20e-2}  # [kgC m-2]
 
 # Model parameters (as provided by Mohtar et al. 1997 p.1492-1493)
 p_grs = {'a': 40.0,  # [m2 kgC-1] structural specific leaf area
@@ -142,6 +142,8 @@ list_WgDM = []
 go_harvest = False
 m_harvest = []
 d_harvest = []
+harvest_day = None
+
 for ti in it:
     # Index for current time instant
     idx = it.index
@@ -152,40 +154,57 @@ for ti in it:
     # harvest_to_mass = 0
     u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
     u_wtr = {'f_Irg': 0}  # [mm d-1]
-    go_harvest, harvest_to_mass, go_final_harvest = slide_win(list_WgDM, 10, 3e-4)
+    go_harvest, harvest_mass, go_final_harvest, harvest_day = slide_win(list_WgDM, 7, 1e-4)
+    if go_harvest:
+        list_WgDM = []
+        if ti<180 and ti>100:
+            print('harvest')
+            print("harvest mass: ", harvest_mass)
+            print("harvest day",harvest_day)
+            harvest_mass = harvest_mass
 
-    if go_harvest and ti>120:
-        print('harvest')
-        # print(harvest_to_mass)
-        harvest_mass = abs(list_WgDM[-1]-harvest_to_mass)*0.4
-        u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass}  # [kgDM m-2 d-1]
-        u_wtr = {'f_Irg': 0}  # [mm d-1]
-        m_harvest.append(harvest_mass/0.4)
-        d_harvest.append(ti)
-        list_WgDM = []
-    if ti >200:
-        print('harvest')
-        # print(harvest_to_mass)
-        harvest_mass = abs(list_WgDM[-1]*0.4*0.9)
-        u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass}  # [kgDM m-2 d-1]
-        u_wtr = {'f_Irg': 0}  # [mm d-1]
-        m_harvest.append(harvest_mass/0.4)
-        d_harvest.append(ti)
-        list_WgDM = []
+            # harvest_mass = list_WgDM[-1]*0.7*0.4
+            u_grs = {'f_Gr': 0, 'f_Hr': abs(harvest_mass*0.4)}  # [kgDM m-2 d-1]
+            u_wtr = {'f_Irg': 0}  # [mm d-1]
+            m_harvest.append(abs(harvest_mass))
+            d_harvest.append(ti)
+            list_WgDM = []
+        elif ti>=200:
+            print('harvest')
+            print("harvest mass: ", harvest_mass)
+            print("harvest day",harvest_day)
+            harvest_mass = harvest_mass
+
+            u_grs = {'f_Gr': 0, 'f_Hr': abs(WgDM[int(ti)]*0.4*1)}  # [kgDM m-2 d-1]
+            u_wtr = {'f_Irg': 0}  # [mm d-1]
+            m_harvest.append(abs(harvest_mass))
+            d_harvest.append(ti)
+            list_WgDM = []
+    # if ti >200:
+    #     print('harvest')
+    #     # print(harvest_to_mass)
+    #     harvest_mass = abs(list_WgDM[-1]*0.4*0.9)
+    #     u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass}  # [kgDM m-2 d-1]
+    #     u_wtr = {'f_Irg': 0}  # [mm d-1]
+    #     m_harvest.append(harvest_mass/0.4)
+    #     d_harvest.append(ti)
+    #     list_WgDM = []
 
     y_grs = grass.run(tspan, d_grs, u_grs)
     # Retrieve grass model outputs for water model
     d_wtr['LAI'] = np.array([y_grs['t'], y_grs['LAI']])
     # Run water model
     y_wtr = water.run(tspan, d_wtr, u_wtr)
+    print("parameter for irr", y_wtr['DSD'])
+
     # Retrieve water model outputs for grass model
     d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
-    WgDM = grass.y['Wg'] / 0.4
+    WgDM = grass.y['Wg']/0.4
     list_WgDM.append(WgDM[int(ti)])
     # print(harvest_to_mass)
     # print(len(list_WgDM))
-print(np.sum(m_harvest))
-print(len(m_harvest))
+print(np.sum((m_harvest)))
+print(m_harvest)
 print(d_harvest)
 # Retrieve simulation results
 t_grs, t_wtr = grass.t, water.t
