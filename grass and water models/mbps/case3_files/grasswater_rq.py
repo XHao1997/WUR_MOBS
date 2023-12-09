@@ -154,7 +154,7 @@ for ti in it:
     # harvest_to_mass = 0
     u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
     u_wtr = {'f_Irg': 0}  # [mm d-1]
-    go_harvest, harvest_mass, go_final_harvest, harvest_day = slide_win(list_WgDM, 7, 1e-4)
+    go_harvest, harvest_mass, go_final_harvest, harvest_day = slide_win(list_WgDM, 7, 4e-3)
     if go_harvest:
         list_WgDM = []
         if ti<180 and ti>100:
@@ -165,44 +165,33 @@ for ti in it:
 
             # harvest_mass = list_WgDM[-1]*0.7*0.4
             u_grs = {'f_Gr': 0, 'f_Hr': abs(harvest_mass*0.4)}  # [kgDM m-2 d-1]
-            u_wtr = {'f_Irg': 0}  # [mm d-1]
+            u_wtr = {'f_Irg': 2e-3}  # [mm d-1]
             m_harvest.append(abs(harvest_mass))
             d_harvest.append(ti)
             list_WgDM = []
-        elif ti>=200:
-            print('harvest')
+        elif idx>200 and idx<220:
+            print('final harvest')
             print("harvest mass: ", harvest_mass)
             print("harvest day",harvest_day)
-            harvest_mass = harvest_mass
-
-            u_grs = {'f_Gr': 0, 'f_Hr': abs(WgDM[int(ti)]*0.4*1)}  # [kgDM m-2 d-1]
-            u_wtr = {'f_Irg': 0}  # [mm d-1]
+            harvest_mass = abs((WgDM[idx]-0.02))
+            u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass*0.4}  # [kgDM m-2 d-1]
+            u_wtr = {'f_Irg': 2e-3}  # [mm d-1]
             m_harvest.append(abs(harvest_mass))
             d_harvest.append(ti)
             list_WgDM = []
-    # if ti >200:
-    #     print('harvest')
-    #     # print(harvest_to_mass)
-    #     harvest_mass = abs(list_WgDM[-1]*0.4*0.9)
-    #     u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass}  # [kgDM m-2 d-1]
-    #     u_wtr = {'f_Irg': 0}  # [mm d-1]
-    #     m_harvest.append(harvest_mass/0.4)
-    #     d_harvest.append(ti)
-    #     list_WgDM = []
 
     y_grs = grass.run(tspan, d_grs, u_grs)
     # Retrieve grass model outputs for water model
     d_wtr['LAI'] = np.array([y_grs['t'], y_grs['LAI']])
     # Run water model
     y_wtr = water.run(tspan, d_wtr, u_wtr)
-    print("parameter for irr", y_wtr['DSD'])
+    # print("parameter for irr", y_wtr['DSD'])
 
     # Retrieve water model outputs for grass model
     d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
     WgDM = grass.y['Wg']/0.4
     list_WgDM.append(WgDM[int(ti)])
-    # print(harvest_to_mass)
-    # print(len(list_WgDM))
+
 print(np.sum((m_harvest)))
 print(m_harvest)
 print(d_harvest)
@@ -220,85 +209,3 @@ plt.legend()
 plt.xlabel(r'$time\ [d]$')
 plt.ylabel(r'$grass\ biomass\ [kgDM\ m^{-2}]$')
 plt.show()
-# fig2, (ax2a, ax2b) = plt.subplots(2, 1, sharex=True)
-# ax2a.plot(t_grs, grass.f['f_P'], label=r'$f_{P}$')
-# ax2a.plot(t_grs, -grass.f['f_SR'], label=r'$f_{SR}$')
-# ax2a.plot(t_grs, -grass.f['f_G'], label=r'$f_{G}$')
-# ax2a.plot(t_grs, -grass.f['f_MR'], label=r'$f_{MR}$')
-# ax2a.plot(t_grs, grass.f['f_R'], label=r'$f_{R}$')
-# ax2a.legend()
-# ax2a.set_ylabel('flow rate ' + r'$[kgC\ m^{-2}\ d^{-1}]$')
-#
-# ax2b.plot(t_grs, grass.f['f_G'], label=r'$f_{G}$')
-# ax2b.plot(t_grs, -grass.f['f_S'], label=r'$f_{S}$')
-# ax2b.plot(t_grs, -grass.f['f_R'], label=r'$f_{R}$')
-# ax2b.plot(t_grs, -grass.f['f_Hr'], label=r'$f_{Hr}$')
-# ax2b.plot(t_grs, -grass.f['f_Gr'], label=r'$f_{Gr}$')
-# ax2b.legend()
-# ax2b.set_ylabel('flow rate ' + r'$[kgC\ m^{-2}\ d^{-1}]$')
-#
-# plt.figure(3)
-# plt.plot(t_wtr, L1, label='L1', color='g')
-# plt.plot(t_wtr, L2, label='L2', color='b')
-# plt.plot(t_wtr, L3, label='L3', color='m')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc1'] * p_wtr['D1']),
-#          linestyle='--', label=r'$fc_{1}$', color='g')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc2'] * p_wtr['D2']),
-#          linestyle='--', label=r'$fc_{2}$', color='b')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc3'] * p_wtr['D3']),
-#          linestyle='--', label=r'$fc_{3}$', color='m')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp1'] * p_wtr['D1']),
-#          linestyle='-.', label=r'$pwp_{1}$', color='g')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp2'] * p_wtr['D2']),
-#          linestyle='-.', label=r'$pwp_{2}$', color='b')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp3'] * p_wtr['D3']),
-#          linestyle='-.', label=r'$pwp_{3}$', color='m')
-# plt.legend()
-# plt.xlabel('time ' + r'$[d]$')
-# plt.ylabel('soil water ' + r'$[mm]$')
-#
-# plt.figure(4)
-# plt.plot(t_wtr, L1 / p_wtr['D1'], label=r'$\theta_{1}$', color='g')
-# plt.plot(t_wtr, L2 / p_wtr['D2'], label=r'$\theta_{2}$', color='b')
-# plt.plot(t_wtr, L3 / p_wtr['D3'], label=r'$\theta_{3}$', color='m')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc1']),
-#          linestyle='--', label=r'$fc_{1}$', color='g')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc2']),
-#          linestyle='--', label=r'$fc_{2}$', color='b')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_fc3']),
-#          linestyle='--', label=r'$fc_{3}$', color='m')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp1']),
-#          linestyle='-.', label=r'$pwp_{1}$', color='g')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp2']),
-#          linestyle='-.', label=r'$pwp_{2}$', color='b')
-# plt.plot(t_wtr, np.full((t_wtr.size,), p_wtr['theta_pwp3']),
-#          linestyle='-.', label=r'$pwp_{3}$', color='m')
-# plt.legend()
-# plt.xlabel('time ' + r'$[d]$')
-# plt.ylabel('vol. fraction ' + r'$[-]$')
-#
-# fig5, (ax5a, ax5b, ax5c) = plt.subplots(3, 1, sharex=True)
-# ax5a.plot(t_wtr, water.f['f_Pe'], label=r'$f_{Pe}$')
-# ax5a.plot(t_wtr, -water.f['f_Ev'], label=r'$f_{Ev}$')
-# ax5a.plot(t_wtr, water.f['f_Irg'], label=r'$f_{Irg}$')
-# ax5a.plot(t_wtr, -water.f['f_Tr1'], label=r'$f_{Tr1}$')
-# ax5a.plot(t_wtr, -water.f['f_Dr1'], label=r'$f_{Dr1}$')
-# ax5a.legend()
-# ax5a.set_ylabel('flow rate ' + r'$[mm\ d^{-1}]$')
-#
-# ax5b.plot(t_wtr, -water.f['f_Tr2'], label=r'$f_{Tr2}$')
-# ax5b.plot(t_wtr, -water.f['f_Dr2'], label=r'$f_{Dr2}$')
-# ax5b.legend()
-# ax5b.set_ylabel('flow rate ' + r'$[mm\ d^{-1}]$')
-#
-# ax5c.plot(t_wtr, -water.f['f_Tr3'], label=r'$f_{Tr3}$')
-# ax5c.plot(t_wtr, -water.f['f_Dr3'], label=r'$f_{Dr3}$')
-# ax5c.legend()
-# ax5c.set_ylabel('flow rate ' + r'$[mm\ d^{-1}]$')
-# ax5c.set_xlabel('time ' + r'$[d]$')
-#
-# plt.show()
-# References
-# Groot, J.C.J., and Lantinga, E.A., (2004). An object oriented model
-#   of the morphological development and digestability of perennial
-#   ryegrass. Ecological Modelling 177(3-4), 297-312.

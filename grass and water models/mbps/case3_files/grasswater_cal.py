@@ -128,7 +128,7 @@ def fnc_y(p0):
     # grass.p['phi'] = p0[2]
     # grass.p['Y'] = p0[2]
     grass.p['Tmin'] = p0[1]
-    # grass.p['beta'] = p0[3]
+    grass.p['M'] = p0[2]
 
     # grass.p['beta'] = p0[3]
     # water.p['D3'] = p0[5]
@@ -162,12 +162,11 @@ def fnc_y(p0):
 
 p0 = [p_grs['alpha'], p_wtr['WAIc'], p_grs['Tmin']]
 # p0 = [p_grs['alpha'], p_grs['beta']]
-p0 = [p_grs['alpha'], p_grs['Tmin']]
+p0 = [p_grs['alpha'], p_grs['Tmin'], p_grs['M']]
 
 # bnds = ((4e-10, 0.5,  0, 0.01), (4e-2, 1,  10, 0.05))
-bnds = ((4e-10, 0.5,  0), (4e-2, 1,  10))
-bnds = ((4e-10, 0), (4e-2,  10))
-
+bnds = ((4e-10, 0.5, 0), (4e-2, 1, 10))
+bnds = ((4e-10, 0, 0), (4e-2, 10, 1))
 
 # bnds = ((4e-10,  0.01), (4e-8, 0.05))
 
@@ -190,7 +189,7 @@ WgDM_hat = fnc_y(p_hat)
 # the measured data
 plt.figure('Calibration alpha & mu_m')
 plt.plot(grass.t, WgDM_hat, label='Calibrated model')
-plt.scatter(t_data, m_data, label='Measured data',color = 'b')
+plt.scatter(t_data, m_data, label='Measured data', color='b')
 plt.legend()
 plt.xlabel(r'$time\ [d]$')
 plt.ylabel(r'$grass\ biomass\ [kgDM\ m^{-2}]$')

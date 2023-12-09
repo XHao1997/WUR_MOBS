@@ -20,7 +20,7 @@ def slide_win(grass_list, num, threshold):
                 # print(len(grow_list))
                 # print('max position:', np.argmax(grow_list)+num)
                 # print('max value:', grass_list[np.argmax(grow_list)+num])
-                harvest_to_mass = grass_list[np.argmax(grow_list)] * 0.75
+                harvest_to_mass = grass_list[np.argmax(grow_list)] *0.65
                 harvest_mass = grass_list[-1] - harvest_to_mass
                 harvest_day = np.argmax(grow_list) + num
     return flag, harvest_mass, go_final_harvest, harvest_day
