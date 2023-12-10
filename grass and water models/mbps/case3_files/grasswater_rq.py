@@ -143,7 +143,8 @@ go_harvest = False
 m_harvest = []
 d_harvest = []
 harvest_day = None
-
+harvest_times = 0
+irr_mass = 0
 for ti in it:
     # Index for current time instant
     idx = it.index
@@ -153,11 +154,12 @@ for ti in it:
 
     # harvest_to_mass = 0
     u_grs = {'f_Gr': 0, 'f_Hr': 0}  # [kgDM m-2 d-1]
-    u_wtr = {'f_Irg': 0}  # [mm d-1]
-    go_harvest, harvest_mass, go_final_harvest, harvest_day = slide_win(list_WgDM, 7, 4e-3)
+    u_wtr = {'f_Irg': irr_mass}  # [mm d-1]
+
+    go_harvest, harvest_mass, go_final_harvest, harvest_day = slide_win(list_WgDM, 7, 7e-3)
     if go_harvest:
         list_WgDM = []
-        if ti<180 and ti>100:
+        if ti<180 and ti>100 and harvest_times!=3:
             print('harvest')
             print("harvest mass: ", harvest_mass)
             print("harvest day",harvest_day)
@@ -165,17 +167,18 @@ for ti in it:
 
             # harvest_mass = list_WgDM[-1]*0.7*0.4
             u_grs = {'f_Gr': 0, 'f_Hr': abs(harvest_mass*0.4)}  # [kgDM m-2 d-1]
-            u_wtr = {'f_Irg': 2e-3}  # [mm d-1]
+
             m_harvest.append(abs(harvest_mass))
             d_harvest.append(ti)
+            harvest_times +=1
             list_WgDM = []
-        elif idx>200 and idx<220:
+        elif idx>200 and idx<240:
             print('final harvest')
             print("harvest mass: ", harvest_mass)
             print("harvest day",harvest_day)
             harvest_mass = abs((WgDM[idx]-0.02))
             u_grs = {'f_Gr': 0, 'f_Hr': harvest_mass*0.4}  # [kgDM m-2 d-1]
-            u_wtr = {'f_Irg': 2e-3}  # [mm d-1]
+            u_wtr = {'f_Irg': 0}  # [mm d-1]
             m_harvest.append(abs(harvest_mass))
             d_harvest.append(ti)
             list_WgDM = []
@@ -185,12 +188,14 @@ for ti in it:
     d_wtr['LAI'] = np.array([y_grs['t'], y_grs['LAI']])
     # Run water model
     y_wtr = water.run(tspan, d_wtr, u_wtr)
+    irr_mass = y_wtr['DSD'][1]*1.2*(idx<200)
     # print("parameter for irr", y_wtr['DSD'])
 
     # Retrieve water model outputs for grass model
     d_grs['WAI'] = np.array([y_wtr['t'], y_wtr['WAI']])
     WgDM = grass.y['Wg']/0.4
-    list_WgDM.append(WgDM[int(ti)])
+    if idx>90:
+        list_WgDM.append(WgDM[int(ti)])
 
 print(np.sum((m_harvest)))
 print(m_harvest)
